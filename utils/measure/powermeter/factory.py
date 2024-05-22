@@ -5,6 +5,7 @@ import config
 from .const import PowerMeterType
 from .dummy import DummyPowerMeter
 from .errors import PowerMeterError
+from .gwinstek import GwInstekPowerMeter
 from .hass import HassPowerMeter
 from .kasa import KasaPowerMeter
 from .manual import ManualPowerMeter
@@ -64,6 +65,10 @@ class PowerMeterFactory:
             config.TUYA_DEVICE_VERSION,
         )
 
+    @staticmethod
+    def gwinstek() -> GwInstekPowerMeter:
+        return GwInstekPowerMeter(config.GWINSTEK_DEVICE_IP)
+
     def create(self) -> PowerMeter:
         """Create the power meter object"""
         factories = {
@@ -76,6 +81,7 @@ class PowerMeterFactory:
             PowerMeterType.TUYA: self.tuya,
             PowerMeterType.DUMMY: self.dummy,
             PowerMeterType.MYSTROM: self.mystrom,
+            PowerMeterType.GWINSTEK: self.gwinstek,
         }
         factory = factories.get(config.SELECTED_POWER_METER)
         if factory is None:
